@@ -1,0 +1,33 @@
+services:
+  backend:
+    container_name: todo-go
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 9090:9090
+    depends_on:
+      - db
+    # environment:
+    #   POSTGRES_DB: go_app_dev
+    #   POSTGRES_HOST: pgdb
+    #   POSTGRES_USER: docker
+    #   POSTGRES_PASSWORD: password
+    #   POSTGRES_PORT: 5435
+    #   JWT_SECRET_KEY: ObL89O3nOSSEj6tbdHako0cXtPErzBUfq8l8o/3KD9g=INSECURE
+    #   API_SECRET_KEY: cJGZ8L1sDcPezjOy1zacPJZxzZxrPObm2Ggs1U0V+fE=INSECURE
+    #   REDIS_HOST: redis
+
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    container_name: pgdb
+    volumes:
+      - .dbdata:/var/lib/postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=mydb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
+    command: -p 5432
