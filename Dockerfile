@@ -1,4 +1,4 @@
-FROM golang:1.23
+FROM golang:1.25 AS builder
 WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
@@ -9,6 +9,6 @@ RUN CGO_ENABLED=0 go build -mod=vendor -o bin/server main.go
 
 FROM alpine:latest 
 WORKDIR /root/
-COPY --from=builder /app/server .
+COPY --from=builder /app/bin/server .
 EXPOSE 9090 
 CMD ["./server"]
