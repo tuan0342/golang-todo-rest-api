@@ -36,3 +36,8 @@ docker compose down
 /// 3. Build lại images khi sửa code
 docker compose --build --no-cache
 ```
+
+### 4. Chạy project ở dạng local
+```bash
+go run -mod=vendor .
+```
