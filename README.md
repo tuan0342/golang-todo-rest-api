@@ -69,6 +69,7 @@ Nếu dự án không dùng vendor → bạn bỏ bước này.
 ```bash
 go run .
 ```
+hoặc
 ```bash
 go run -mod=vendor .
 ```
