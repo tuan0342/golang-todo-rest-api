@@ -38,9 +38,8 @@ docker compose --build --no-cache
 ```
 
 ### 4. Các câu lệnh terminal của golang thường gặp
-##### 4.1. Kiểm tra và tải dependency
+#### 4.1. Kiểm tra và tải dependency
 ```bash
-go run -mod=vendor .
 go mod download
 ```
 Lệnh này: tải tất cả dependency từ go.mod về local máy (không phải tải về project)
@@ -54,7 +53,7 @@ Tác dụng:
 - thêm dependency còn thiếu
 - update go.sum
 
-##### 4.2. Vendor dependency
+#### 4.2. Vendor dependency
 Một số project yêu cầu vendor/:
 ```bash
 go mod vendor
@@ -66,7 +65,7 @@ Dùng khi:
 - muốn đảm bảo dependency cố định
 Nếu dự án không dùng vendor → bạn bỏ bước này.
 
-##### 4.2. Chạy dự án
+#### 4.2. Chạy dự án
 ```bash
 go run .
 ```
