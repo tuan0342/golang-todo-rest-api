@@ -73,3 +73,25 @@ hoặc
 ```bash
 go run -mod=vendor .
 ```
+
+### 5. Các khái niệm
+#### 5.1. CHAINING (Query Building Stage) và EXECUTION (Query Execution Stage)
+- Đây là hai giai đoạn mà mọi ORM (GORM, Hibernate, Sequelize…) đều có.
+##### 5.1.1. CHAINING (Query Building Phase)
+- Chaining = xây dựng câu query nhưng CHƯA GỬI xuống database.
+```bash
+db.Where("name = ?", "Tuan").Order("id desc").Limit(10)
+```
+- Ở đây, không có query SQL nào được gửi xuống PostgreSQL.
+- Nó chỉ xây dựng một đối tượng “query builder”.
+VD: Where(), Order(), Offset(), Limit(), Model(), Select()
+##### 5.1.1. EXECUTION (Query Execution Phase)
+- Execution = khi ORM thực sự gửi câu query xuống database PostgreSQL.
+```bash
+db.Where("name = ?", "Tuan").Find(&users)
+```
+- Ở đây, .Find() là hành động thực thi.
+GORM sẽ chạy SQL:
+```bash
+SELECT * FROM users WHERE name = 'Quan';
+```
