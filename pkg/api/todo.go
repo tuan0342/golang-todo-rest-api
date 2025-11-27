@@ -1,23 +1,33 @@
-package routers
+package api
 
-import (
-	"example/todo-go/database"
-	"example/todo-go/dto"
-	"example/todo-go/models"
-	"net/http"
+import ()
 
-	"github.com/gin-gonic/gin"
-)
-
-func RegisterTodoRoutes(r *gin.Engine) {
-	r.POST("/todos", createTodo)
-	r.GET("/todos", getTodos)
-	r.GET("/todos/:id", getTodoById)
-	r.PUT("/todos/:id", updateTodo)
-	r.DELETE("/todos/:id", deleteTodo)
+type TodoRepository interface {
+	Healthcheck(c *gin.Context)
+	CreateTodo(c *gin.Context)
+	GetTodos(c *gin.Context)
+	GetTodoById(c *gin.Context)
+	UpdateTodo(c *gin.Context)
+	DeleteTodo(c *gin.Context)
 }
 
-func createTodo(c *gin.Context) {
+type todoRepository struct {
+	DB database.Database
+	Ctx *context.Context
+}
+
+func NewTodoRepository(db database.Database, ctx *context.Context) *todoRepository {
+	return &todoRepository{
+		DB: db,
+		Ctx: ctx,
+	}
+}
+
+func (r *todoRepository) Healthcheck(c *gin.Context) {
+	c.JSON(http.StatusOK, "ok")
+}
+
+func (r *todoRepository) CreateTodo(c *gin.Context) {
 	var req dto.CreateTodoRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -30,13 +40,13 @@ func createTodo(c *gin.Context) {
 		Completed: req.Completed,
 	}
 
-	database.DB.Create(&todo)
+	r.DB.Create(&todo)
 	c.JSON(200, dto.ConvertToTodoResponse(todo))
 }
 
-func getTodos(c *gin.Context) {
+func (r *todoRepository) GetTodos(c *gin.Context) {
 	var todos []models.Todo
-	database.DB.Find(&todos)
+	r.DB.Find(&todos)
 	// var response []dto.TodoResponse /// response == nil -> true
 	response := make([]dto.TodoResponse, 0)
 	for _, todo := range todos {
@@ -46,10 +56,10 @@ func getTodos(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-func getTodoById(c *gin.Context) {
+func (r *todoRepository) GetTodoById(c *gin.Context) {
 	id := c.Param("id")
 	var todo models.Todo
-	if err := database.DB.First(&todo, id).Error; err != nil {
+	if err := r.DB.First(&todo, id).Error(); err != nil {
 		c.JSON(404, gin.H{"error": "Todo khong ton tai"})
 		return
 	}
@@ -57,10 +67,10 @@ func getTodoById(c *gin.Context) {
 	c.JSON(200, dto.TodoResponse(todo))
 }
 
-func updateTodo(c *gin.Context) {
+func (r *todoRepository) UpdateTodo(c *gin.Context) {
 	id := c.Param("id")
 	var todo models.Todo
-	if err := database.DB.First(&todo, id).Error; err != nil {
+	if err := r.DB.First(&todo, id).Error(); err != nil {
 		c.JSON(404, gin.H{"error": "Todo khong ton tai"})
 		return
 	}
@@ -74,19 +84,19 @@ func updateTodo(c *gin.Context) {
 	todo.Item = req.Item
 	todo.Completed = req.Completed
 
-	database.DB.Save(&todo)
+	r.DB.Save(&todo)
 	c.JSON(200, dto.ConvertToTodoResponse(todo))
 }
 
-func deleteTodo(c *gin.Context) {
+func (r *todoRepository) DeleteTodo(c *gin.Context) {
 	id := c.Param("id")
 	var todo models.Todo
 
-	if err := database.DB.First(&todo, id).Error; err != nil {
+	if err := r.DB.First(&todo, id).Error(); err != nil {
 		c.JSON(404, gin.H{"error": "Todo khong ton tai"})
 		return
 	}
 
-	database.DB.Delete(&todo)
+	r.DB.Delete(&todo)
 	c.JSON(200, gin.H{"message": "Deleted"})
 }

@@ -18,17 +18,18 @@ func main() {
 		log.Println(".env file not found, using default env")
 	}
 
-	database.Connect()
-	database.DB.AutoMigrate(&models.Todo{})
+	db := database.NewDatabase()
+	dbWrapper := &database.GormDatabase{DB: db}
+	ctx := context.Backgroud()
 
-	router := gin.Default()
-	router.Use(middleware.JSONBindLogger())
-	routers.RegisterTodoRoutes(router)
+	// gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.DebugMode)
+	r := api.NewRouter(dbWrapper, &ctx)
 
 	port := os.Getenv("PORT")
 	if port == "" {
 		log.Println("============= Running default port 9090 =============")
 		port = "9090" // default
 	}
-	router.Run(":" + port)
+	r.Run(":" + port)
 }
