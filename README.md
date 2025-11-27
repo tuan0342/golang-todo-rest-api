@@ -93,5 +93,5 @@ db.Where("name = ?", "Tuan").Find(&users)
 - Ở đây, .Find() là hành động thực thi.
 GORM sẽ chạy SQL:
 ```bash
-SELECT * FROM users WHERE name = 'Quan';
+SELECT * FROM users WHERE name = 'Tuan';
 ```
