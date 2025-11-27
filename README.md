@@ -74,6 +74,11 @@ hoặc
 go run -mod=vendor .
 ```
 
+#### 4.3. Build binary
+```bash
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -mod=vendor -o bin/server cmd/server/main.go
+```
+
 ### 5. Các khái niệm
 #### 5.1. CHAINING (Query Building Stage) và EXECUTION (Query Execution Stage)
 - Đây là hai giai đoạn mà mọi ORM (GORM, Hibernate, Sequelize…) đều có.
