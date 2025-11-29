@@ -1,10 +1,9 @@
 package main
 
 import (
-	"example/todo-go/database"
-	"example/todo-go/middleware"
-	"example/todo-go/models"
-	"example/todo-go/routers"
+	"context"
+	"example/todo-go/pkg/api"
+	"example/todo-go/pkg/database"
 	"log"
 	"os"
 
@@ -20,7 +19,7 @@ func main() {
 
 	db := database.NewDatabase()
 	dbWrapper := &database.GormDatabase{DB: db}
-	ctx := context.Backgroud()
+	ctx := context.Background()
 
 	// gin.SetMode(gin.ReleaseMode)
 	gin.SetMode(gin.DebugMode)

@@ -1,8 +1,6 @@
 package dto
 
-import (
-	"example/todo-go/models"
-)
+import "example/todo-go/pkg/models"
 
 type TodoResponse struct {
 	ID        int    `json:"id"`

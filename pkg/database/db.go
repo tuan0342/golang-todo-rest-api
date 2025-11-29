@@ -1,9 +1,11 @@
 package database
 
 import (
+	"example/todo-go/pkg/models"
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -16,7 +18,7 @@ type Database interface {
 	Create(value interface{}) *gorm.DB
 	Where(query interface{}, args ...interface{}) Database
 	Delete(value interface{}, conds ...interface{}) *gorm.DB
-	Model(model interface{}) *gorm.db
+	Model(model interface{}) *gorm.DB
 	First(dest interface{}, conds ...interface{}) Database
 	Save(value interface{}) *gorm.DB
 	Updates(interface{}) *gorm.DB
@@ -60,7 +62,7 @@ func NewDatabase() *gorm.DB {
 			time.Sleep(3 * time.Second)
 		}
 	}
-	
+
 	database.AutoMigrate(&models.Todo{})
 	return database
 }

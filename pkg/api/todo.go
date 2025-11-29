@@ -1,6 +1,14 @@
 package api
 
-import ()
+import (
+	"context"
+	"example/todo-go/pkg/database"
+	"example/todo-go/pkg/dto"
+	"example/todo-go/pkg/models"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+)
 
 type TodoRepository interface {
 	Healthcheck(c *gin.Context)
@@ -12,13 +20,13 @@ type TodoRepository interface {
 }
 
 type todoRepository struct {
-	DB database.Database
+	DB  database.Database
 	Ctx *context.Context
 }
 
 func NewTodoRepository(db database.Database, ctx *context.Context) *todoRepository {
 	return &todoRepository{
-		DB: db,
+		DB:  db,
 		Ctx: ctx,
 	}
 }
